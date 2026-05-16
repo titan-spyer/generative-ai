@@ -1,12 +1,7 @@
-# Define here the models for your scraped items
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/items.html
-
 import scrapy
 
-
-class ManualCrawlItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class SklearnItem(scrapy.Item):
+    url = scrapy.Field()
+    component_name = scrapy.Field()
+    parameters = scrapy.Field()
+    examples = scrapy.Field()
