@@ -3,19 +3,20 @@ import json
 
 class ManualCrawlPipeline:
     def open_spider(self, spider):
-        # Connect to SQLite database (creates it if it doesn't exist)
+        # Connect to SQLite database
         self.conn = sqlite3.connect('sklearn_data.db')
         self.cur = self.conn.cursor()
 
         self.cur.execute("PRAGMA foreign_keys = ON;")
         
-        # Create table for the main components
+        # 1. ADDED structured_body TO THE COMPONENTS TABLE
         self.cur.execute("""
             CREATE TABLE IF NOT EXISTS components (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 url TEXT,
                 component_name TEXT,
-                examples TEXT
+                examples TEXT,
+                structured_body TEXT
             )
         """)
         
@@ -35,14 +36,15 @@ class ManualCrawlPipeline:
         self.conn.close()
 
     def process_item(self, item, spider):
-        # Insert the main component
+        # 2. UPDATED SQL INSERT TO EXPECT AND SAVE STRUCURED BODY
         self.cur.execute("""
-            INSERT INTO components (url, component_name, examples)
-            VALUES (?, ?, ?)
+            INSERT INTO components (url, component_name, examples, structured_body)
+            VALUES (?, ?, ?, ?)
         """, (
             item.get('url', ''),
             item.get('component_name', ''),
-            item.get('examples', '')
+            item.get('examples', ''),
+            item.get('structured_body', '')
         ))
         
         # Get the ID of the inserted component
