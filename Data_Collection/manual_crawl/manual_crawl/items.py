@@ -5,3 +5,4 @@ class SklearnItem(scrapy.Item):
     component_name = scrapy.Field()
     parameters = scrapy.Field()
     examples = scrapy.Field()
+    structured_body = scrapy.Field()

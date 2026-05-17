@@ -44,15 +44,19 @@ class SklearnSpider(scrapy.Spider):
         for dt in param_dts:
             # The parameter name is usually inside a <strong> tag or it's just the text of the dt/li
             param_name = ''.join(dt.css('strong::text').getall()).strip()
-            if not param_name:
+            if  not list(dt.css('strong::text').getall()) and ':' in dt.xpath('string(.)').get(default=''):
                 param_name = dt.xpath('string(.)').get().strip().split(':')[0]
-                
-            param_desc_dd = dt.xpath('following-sibling::dd[1]')
-            if param_desc_dd:
+
+            if not param_name:
+                continue
+
+            if dt.root.tag == 'dt':
+                param_desc_dd = dt.xpath('following-sibling::dd[1]')
                 param_desc = ' '.join(param_desc_dd.xpath('string(.)').getall()).strip()
             else:
-                param_desc = ''
-                
+                total_text = dt.xpath('string(.)').get(default='').strip()
+                param_desc = total_text.replace(param_name, '', 1).lstrip(' :').strip()
+
             parameters.append({
                 'parameter': param_name,
                 'description': param_desc
@@ -71,4 +75,8 @@ class SklearnSpider(scrapy.Spider):
                 
         item['examples'] = "\n\n".join(examples_text)
         
+        # Extract the core text section without global headers, footers, or navigational menus
+        main_block = response.css('div.section, main, article').xpath('string(.)').get()
+        item['structured_body'] = main_block.strip() if main_block else ""
+
         yield item

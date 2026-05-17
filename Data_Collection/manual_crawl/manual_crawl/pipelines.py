@@ -6,6 +6,8 @@ class ManualCrawlPipeline:
         # Connect to SQLite database (creates it if it doesn't exist)
         self.conn = sqlite3.connect('sklearn_data.db')
         self.cur = self.conn.cursor()
+
+        self.cur.execute("PRAGMA foreign_keys = ON;")
         
         # Create table for the main components
         self.cur.execute("""
