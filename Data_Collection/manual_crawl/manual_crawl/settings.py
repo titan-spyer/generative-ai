@@ -10,7 +10,7 @@ ROBOTSTXT_OBEY = False
 
 # Configure concurrent requests and delay to be polite and avoid blocking
 CONCURRENT_REQUESTS = 16
-DOWNLOAD_DELAY = 1
+DOWNLOAD_DELAY = 2
 
 # Enable fake user agent middleware
 DOWNLOADER_MIDDLEWARES = {
