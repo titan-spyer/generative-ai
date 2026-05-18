@@ -1,0 +1,4 @@
+scrapy
+fake-useragent
+scrapy-selenium
+selenium
